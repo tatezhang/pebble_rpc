@@ -71,7 +71,7 @@ dr::protocol::TProtocol* PebbleRpc::GetCodec(MemoryPolicy mem_policy) {
         return codec;
     }
 
-    // 首次创建
+    /* 首次创建 */
     cxx::shared_ptr<dr::transport::TTransport> trans;
     try {
         if (kBORROW == mem_policy) {
@@ -90,7 +90,7 @@ dr::protocol::TProtocol* PebbleRpc::GetCodec(MemoryPolicy mem_policy) {
             break;
 
         case kCODE_BINARY:
-        case kCODE_PB: // Protobuf rpc head使用dr binary编码
+        case kCODE_PB: /* Protobuf rpc head使用dr binary编码 */
             codec = new dr::protocol::TBinaryProtocol(trans);
             break;
 
@@ -112,8 +112,10 @@ uint8_t* PebbleRpc::GetBuffer(int32_t size) {
         PLOG_ERROR_N_EVERY_SECOND(1, "the size %d > max buff size %d", size, max_buff_size);
         return NULL;
     }
-    // 2 * size or max_buff_size
-    int32_t need_realloc = std::min(size + size - m_buff_size, max_buff_size - m_buff_size);
+    /* 2 * size or max_buff_size */
+    int32_t size1 = size + size - m_buff_size;
+    int32_t size2 = max_buff_size - m_buff_size;
+    int32_t need_realloc = size1 < size2 ? size1 : size2;
     uint8_t* new_buff = (uint8_t*)realloc(m_buff, need_realloc);
     if (new_buff == NULL) {
         PLOG_ERROR("realloc failed, buff size %d, realloc size %d", m_buff_size, need_realloc);
@@ -131,7 +133,7 @@ int32_t PebbleRpc::HeadEncode(const RpcHead& rpc_head, uint8_t* buff, uint32_t b
             return len;
         }
 
-        // json编码头部后再补充一个','
+        /* json编码头部后再补充一个',' */
         int append_size = 0;
         if (len > 0 && len < static_cast<int>(buff_len)) {
             append_size = dr::protocol::writeElemSeparator(buff + len, buff_len - len);
@@ -155,7 +157,7 @@ int32_t PebbleRpc::HeadDecode(const uint8_t* buff, uint32_t buff_len, RpcHead* r
             return len;
         }
 
-        // json解码头部后再解出','
+        /* json解码头部后再解出',' */
         int read_len = 0;
         if (len > 0 && len < static_cast<int>(buff_len)) {
             read_len = dr::protocol::readElemSeparator(buff + len, buff_len - len);

@@ -16,7 +16,7 @@
 
 namespace pebble {
 
-// 避免全局变量构造、析构顺序问题
+/* 避免全局变量构造、析构顺序问题 */
 static cxx::unordered_map<int32_t, const char*> * g_error_string_map = NULL;
 struct ErrorInfo {
     ErrorInfo() {

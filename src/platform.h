@@ -15,7 +15,7 @@
 #ifndef _PEBBLE_COMMON_PLATFORM_H_
 #define _PEBBLE_COMMON_PLATFORM_H_
 
-/// @brief 此文件只包含平台及编译器差异信息
+/* @brief 此文件只包含平台及编译器差异信息 */
 
 #ifndef __STDC_LIMIT_MACROS
 #define __STDC_LIMIT_MACROS
@@ -23,11 +23,27 @@
 
 #include <stdint.h>
 
-// 源码依赖场景下，可以适配编译器版本
-// 包依赖场景下，统一使用std::tr1，避免c++11编译器编译时pebble的头文件和lib不一致
+/*
+    源码依赖场景下，可以适配编译器版本
+    包依赖场景下，统一使用std::tr1，避免c++11编译器编译时pebble的头文件和lib不一致
+*/
 #define BUILD_WITH_SRC 0
 
+#if defined(_WIN32) || defined(_WIN64)
+#if _MSC_VER < 1700 // < vs 11
+#define USE_STD_TR1 1
+#else // >= vs11
+#define USE_STD_TR1 0
+#endif
+#else
 #if __cplusplus < 201103L || !(BUILD_WITH_SRC)
+#define USE_STD_TR1 1
+#else
+#define USE_STD_TR1 0
+#endif
+#endif
+
+#if USE_STD_TR1
 #include <tr1/functional>
 #include <tr1/memory>
 #include <tr1/unordered_map>
@@ -80,7 +96,7 @@
 namespace pebble {
 namespace stdcxx {
 
-#if __cplusplus < 201103L || !(BUILD_WITH_SRC)
+#if USE_STD_TR1
 
 using ::std::tr1::function;
 using ::std::tr1::bind;

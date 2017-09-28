@@ -21,30 +21,30 @@
 #include "platform.h"
 
 
-/// @brief 格式化输出log信息到buff
+/* @brief 格式化输出log信息到buff */
 #define LOG_MESSAGE(buff, buff_len, fmt, ...) \
     snprintf((buff), (buff_len), "(%s:%d)(%s)" fmt, \
     __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__)
 
 
-/// @brief 记录最后错误信息，内部使用，要求buff名字为m_last_error
+/* @brief 记录最后错误信息，内部使用，要求buff名字为m_last_error */
 #define _LOG_LAST_ERROR(fmt, ...) \
     LOG_MESSAGE((m_last_error), (sizeof(m_last_error)), fmt, ##__VA_ARGS__)
 
 namespace pebble {
 
-/// @brief 每个模块错误码BASE定义，模块错误码取值为XXX_BASE - N
+/* @brief 每个模块错误码BASE定义，模块错误码取值为XXX_BASE - N */
 enum ERROR_CODE_BASE {
-    NO_ERROR                    = 0,
+    // NO_ERROR                    = 0,
     RPC_ERROR_CODE_BASE         = -1000,
     TIMER_ERROR_CODE_BASE       = -6000,
-    PROCESSOR_ERROR_CODE_BASE   = -10000,
+    PROCESSOR_ERROR_CODE_BASE   = -10000
 };
 
-/// @brief 获取错误描述
+/* @brief 获取错误描述 */
 const char* GetErrorString(int32_t error_code);
 
-/// @brief 设置错误描述
+/* @brief 设置错误描述 */
 void SetErrorString(int32_t error_code, const char* error_string);
 
 } // namespace pebble

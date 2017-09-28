@@ -88,7 +88,7 @@ static inline To bitwise_cast(From from) {
 # else
 // #  include <boost/config.hpp>
 // #  include <boost/detail/endian.hpp>
-#  include <source/common/endian.hpp>
+#  include <dr/common/endian.hpp>
 #  define __THRIFT_BYTE_ORDER BOOST_BYTE_ORDER
 #  ifdef BOOST_LITTLE_ENDIAN
 #   define __THRIFT_LITTLE_ENDIAN __THRIFT_BYTE_ORDER
@@ -148,7 +148,7 @@ using pebble::dr::transport::TTransport;
  * the end of a sequence of fields.
  */
 enum TType {
-  T_NULL       =-1, // 表示无法从序列化数据中获取类型信息，而是由生成代码决定下一步该读什么类型
+  T_NULL       =-1, /* 表示无法从序列化数据中获取类型信息，而是由生成代码决定下一步该读什么类型 */
   T_STOP       = 0,
   T_VOID       = 1,
   T_BOOL       = 2,
@@ -296,10 +296,11 @@ static const uint32_t DEFAULT_RECURSION_LIMIT = 64;
  *
  */
 
-// 序列化协议message begin部分修改为如下
-// new:<message-begin> ::= <message-type> <service-name:method-name> <message-seqid>
-// old:  <message-begin> ::= <message-type> <method-name> <message-seqid>
-
+/*
+序列化协议message begin部分修改为如下
+new:<message-begin> ::= <message-type> <service-name:method-name> <message-seqid>
+old:  <message-begin> ::= <message-type> <method-name> <message-seqid>
+*/
 class TProtocol {
  public:
   virtual ~TProtocol() {}

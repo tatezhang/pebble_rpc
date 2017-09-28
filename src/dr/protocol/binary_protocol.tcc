@@ -43,7 +43,7 @@ uint32_t TBinaryProtocolT<Transport_>::writeMessageBegin(const std::string& name
     wsize += writeI64(seqid);
     return wsize;
   } else {
-    // TODO: ÀÏ°æ±¾Ğ­Òé¼æÈİ£¬¿ÉÈ¥µô
+    /* TODO: è€ç‰ˆæœ¬åè®®å…¼å®¹ï¼Œå¯å»æ‰ */
     uint32_t wsize = 0;
     wsize += writeString(name);
     wsize += writeByte((int8_t)messageType);
@@ -225,7 +225,7 @@ uint32_t TBinaryProtocolT<Transport_>::readMessageBegin(std::string& name,
       throw TProtocolException(TProtocolException::BAD_VERSION, "No version identifier... old protocol client in strict mode?");
     } else {
       // Handle pre-versioned input
-      // TODO: ÀÏ°æ±¾¼æÈİ£¬pebble²»Éæ¼°£¬Õâ²¿·ÖÓ¦¸ÃÈ¥µô
+      /* TODO: è€ç‰ˆæœ¬å…¼å®¹ï¼Œpebbleä¸æ¶‰åŠï¼Œè¿™éƒ¨åˆ†åº”è¯¥å»æ‰ */
       int8_t type;
       result += readStringBody(name, sz);
       result += readByte(type);

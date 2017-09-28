@@ -31,7 +31,7 @@ SequenceTimer::~SequenceTimer() {
 
 int64_t SequenceTimer::StartTimer(uint32_t timeout_ms, const TimeoutCallback& cb) {
     if (!cb || 0 == timeout_ms) {
-        _LOG_LAST_ERROR("param is invalid: timeout_ms = %u, cb = %d", timeout_ms, (cb ? true : false));
+        // _LOG_LAST_ERROR("param is invalid: timeout_ms = %u, cb = %d", timeout_ms, (cb ? true : false));
         return kTIMER_INVALID_PARAM;
     }
 
@@ -51,7 +51,7 @@ int32_t SequenceTimer::StopTimer(int64_t timer_id) {
     cxx::unordered_map<int64_t, cxx::shared_ptr<TimerItem> >::iterator it =
         m_id_2_timer.find(timer_id);
     if (m_id_2_timer.end() == it) {
-        _LOG_LAST_ERROR("timer id %ld not exist", timer_id);
+        // _LOG_LAST_ERROR("timer id %ld not exist", timer_id);
         return kTIMER_UNEXISTED;
     }
 
@@ -72,7 +72,7 @@ int32_t SequenceTimer::Update() {
         m_timers.begin();
     std::list<cxx::shared_ptr<TimerItem> >::iterator lit;
     while (mit != m_timers.end()) {
-        // 暂不考虑主动清理，顺序定时器即使不清理，也不会占用太多内存，频繁清理反而会影响性能
+        /* 暂不考虑主动清理，顺序定时器即使不清理，也不会占用太多内存，频繁清理反而会影响性能 */
 
         std::list<cxx::shared_ptr<TimerItem> >& timer_list = mit->second;
         while (!timer_list.empty()) {
@@ -83,14 +83,14 @@ int32_t SequenceTimer::Update() {
             }
 
             if ((*lit)->timeout > now) {
-                // 此队列后面的都未超时
+                /* 此队列后面的都未超时 */
                 break;
             }
 
             old_timeout = mit->first;
             ret = (*lit)->cb();
 
-            // 返回 <0 删除定时器，=0 继续，>0按新的超时时间重启定时器
+            /* 返回 <0 删除定时器，=0 继续，>0按新的超时时间重启定时器 */
             if (ret < 0) {
                 m_id_2_timer.erase((*lit)->id);
                 timer_list.erase(lit);
@@ -110,7 +110,7 @@ int32_t SequenceTimer::Update() {
         }
 
         if (timer_map_size != m_timers.size()) {
-            // 暂时用此方法防止迭代器失效，m_timers目前实现只会增加不会减少
+            /* 暂时用此方法防止迭代器失效，m_timers目前实现只会增加不会减少 */
             break;
         }
         ++mit;

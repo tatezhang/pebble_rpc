@@ -211,7 +211,8 @@ private:
         rBase_ = buffer_;
         rBound_ = buffer_ + wPos;
         // TODO Investigate NULL-ing this if !owner.
-        // wBase_ = buffer_ + wPos; // 可写的模式
+        // wBase_ = buffer_ + wPos; 
+        /* 可写的模式 */
         wBase_ = buffer_;
         wBound_ = buffer_ + bufferSize_;
 
@@ -245,7 +246,7 @@ public:
      *   and will be responsible for freeing it.
      *   The membory must have been allocated with malloc.
      */
-    // TODO: OBSERVE改造
+    /* TODO: OBSERVE改造 */
     enum MemoryPolicy
     { OBSERVE = 1
     , COPY = 2

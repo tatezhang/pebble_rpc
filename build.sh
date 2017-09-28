@@ -11,4 +11,7 @@ rm build/* -rf
 cd build
 cmake ../
 make
+make install
 
+release_name=`date +%Y%m%d%H%M%S`
+tar zcf pebble_rpc_$release_name.tgz pebble_rpc

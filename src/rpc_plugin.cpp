@@ -39,14 +39,14 @@ int32_t ProtoBufRpcPlugin::HeadEncode(const RpcHead& rpc_head, uint8_t* buff, ui
 
     int32_t len = -1;
     try {
-        // 1. ProtoBufRpcHead赋值
+        /* 1. ProtoBufRpcHead赋值 */
         ProtoBufRpcHead pb_head;
-        // pb_head.version         = rpc_head.m_version; // 暂时不需要版本号
+        // pb_head.version         = rpc_head.m_version; /* 暂时不需要版本号 */
         pb_head.msg_type        = rpc_head.m_message_type;
         pb_head.session_id      = rpc_head.m_session_id;
         pb_head.function_name   = rpc_head.m_function_name;
 
-        // 2. 序列化ProtoBufRpcHead，考虑到性能不使用write(buff, bufflen)接口
+        /* 2. 序列化ProtoBufRpcHead，考虑到性能不使用write(buff, bufflen)接口 */
         len = pb_head.write(encoder);
     } catch (TException e) {
         PLOG_ERROR_N_EVERY_SECOND(1, "catch exception : %s", e.what());
@@ -70,14 +70,14 @@ int32_t ProtoBufRpcPlugin::HeadDecode(const uint8_t* buff, uint32_t buff_len, Rp
     (static_cast<dr::transport::TMemoryBuffer*>(decoder->getTransport().get()))->
         resetBuffer(const_cast<uint8_t*>(buff), buff_len, dr::transport::TMemoryBuffer::OBSERVE);
 
-    // 解消息头
+    /* 解消息头 */
     int32_t head_len = -1;
     try {
-        // 1. 反序列化ProtoBufRpcHead
+        /* 1. 反序列化ProtoBufRpcHead */
         ProtoBufRpcHead pb_head;
         head_len = pb_head.read(decoder);
 
-        // 2. 给rpc_head赋值
+        /* 2. 给rpc_head赋值 */
         if (pb_head.__isset.version) {
             rpc_head->m_version       = pb_head.version;
         }
@@ -139,7 +139,7 @@ int32_t ThriftRpcPlugin::HeadDecode(const uint8_t* buff, uint32_t buff_len, RpcH
     (static_cast<dr::transport::TMemoryBuffer*>(decoder->getTransport().get()))->
         resetBuffer(const_cast<uint8_t*>(buff), buff_len, dr::transport::TMemoryBuffer::OBSERVE);
 
-    // 解消息头
+    /* 解消息头 */
     int32_t head_len = -1;
     try {
         int64_t seqid = 0;

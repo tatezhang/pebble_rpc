@@ -94,7 +94,7 @@ class TJSONProtocol : public TVirtualProtocol<TJSONProtocol> {
 
   ~TJSONProtocol();
 
-  // 框架中protocol复用，在每次使用前需要清空context防止异常
+  /* 框架中protocol复用，在每次使用前需要清空context防止异常 */
   void clearContext();
 
  private:
@@ -317,14 +317,18 @@ class TJSONProtocolFactory : public TProtocolFactory {
   }
 };
 
-/// @brief 向buff中写入元素分隔符，分隔符由JsonProtocol定义
-/// @return <0 失败
-/// @return >0 成功，返回值为写的字节数
+/*
+    @brief 向buff中写入元素分隔符，分隔符由JsonProtocol定义
+    @return <0 失败
+    @return >0 成功，返回值为写的字节数
+*/
 int writeElemSeparator(uint8_t* buff, uint32_t buff_len);
 
-/// @brief 尝试从buff中读取元素分隔符，分隔符由JsonProtocol定义
-/// @return <0 失败
-/// @return >0 成功，读取的字节数
+/*
+    @brief 尝试从buff中读取元素分隔符，分隔符由JsonProtocol定义
+    @return <0 失败
+    @return >0 成功，读取的字节数
+*/
 int readElemSeparator(const uint8_t* buff, uint32_t buff_len);
 
 }}} // pebble::dr::protocol

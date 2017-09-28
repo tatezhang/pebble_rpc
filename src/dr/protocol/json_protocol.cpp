@@ -265,7 +265,7 @@ static bool isJSONNumeric(uint8_t ch) {
 }
 
 
-// 外部存在独立组装一个json消息的场景，为保证json protocol的封闭性，单独提供两个api供拼接消息头和消息体
+/* 外部存在独立组装一个json消息的场景，为保证json protocol的封闭性，单独提供两个api供拼接消息头和消息体 */
 int writeElemSeparator(uint8_t* buff, uint32_t buff_len) {
     if (buff_len == 0) {
         return -1;
@@ -937,7 +937,7 @@ uint32_t TJSONProtocol::readJSONArrayEnd() {
 uint32_t TJSONProtocol::readMessageBegin(std::string& name,
                                          TMessageType& messageType,
                                          int64_t& seqid) {
-  clearContext(); // 清空context，防止残渣状态
+  clearContext(); /* 清空context，防止残渣状态 */
   uint32_t result = readJSONArrayStart();
   uint64_t tmpVal = 0;
   result += readJSONInteger(tmpVal);

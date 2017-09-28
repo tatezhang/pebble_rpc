@@ -23,7 +23,7 @@ namespace pebble {
 
 class TimeUtility {
 public:
-    // 得到当前的毫秒
+    /* 得到当前的毫秒 */
     static int64_t GetCurrentMS();
 
 };

@@ -46,7 +46,7 @@ uint32_t readAll(Transport_ &trans, uint8_t* buf, uint32_t len) { // NOLINT
 
     return have;
 */
-    // transport 统一设置为非阻塞
+    /* transport 统一设置为非阻塞 */
     return trans.read(buf, len);
 }
 

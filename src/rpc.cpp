@@ -22,7 +22,7 @@
 
 namespace pebble {
 
-/// @brief RPC会话数据结构定义
+/* @brief RPC会话数据结构定义 */
 struct RpcSession {
 private:
     RpcSession(const RpcSession& rhs) {
@@ -160,26 +160,26 @@ int32_t IRpc::SendRequest(int64_t handle,
                     uint32_t buff_len,
                     const OnRpcResponse& on_rsp,
                     int32_t timeout_ms) {
-    // buff允许为空，长度非0时做非空检查
+    /* buff允许为空，长度非0时做非空检查 */
     if (buff_len != 0 && NULL == buff) {
         PLOG_ERROR_N_EVERY_SECOND(1, "param invalid: buff = %p, buff_len = %u", buff, buff_len);
         return kRPC_INVALID_PARAM;
     }
 
-    // 发送请求
+    /* 发送请求 */
     int32_t ret = SendMessage(handle, rpc_head, buff, buff_len);
     if (ret != kRPC_SUCCESS) {
         ResponseProcComplete(rpc_head.m_function_name, kRPC_SEND_FAILED, 0);
         return ret;
     }
 
-    // ONEWAY请求
+    /* ONEWAY请求 */
     if (!on_rsp) {
         ResponseProcComplete(rpc_head.m_function_name, kRPC_SUCCESS, 0);
         return kRPC_SUCCESS;
     }
 
-    // 保持会话
+    /* 保持会话 */
     cxx::shared_ptr<RpcSession> session(new RpcSession());
     session->m_session_id  = rpc_head.m_session_id;
     session->m_handle      = handle;
@@ -214,12 +214,12 @@ int32_t IRpc::SendResponse(uint64_t session_id, int32_t ret,
     int32_t result = kRPC_SUCCESS;
     int32_t error_code = kRPC_SUCCESS;
     if (kRPC_SUCCESS == ret) {
-        // 业务处理成功，构造响应消息返回
+        /* 业务处理成功，构造响应消息返回 */
         it->second->m_rpc_head.m_message_type = kRPC_REPLY;
         result = SendMessage(it->second->m_handle, it->second->m_rpc_head, buff, buff_len);
         error_code = result;
     } else {
-        // 业务处理失败，构造异常消息携带错误信息返回
+        /* 业务处理失败，构造异常消息携带错误信息返回 */
         result = ResponseException(it->second->m_handle, ret, it->second->m_rpc_head, buff, buff_len);
         error_code = ret;
     }
@@ -298,7 +298,7 @@ int32_t IRpc::ProcessRequest(int64_t handle, const RpcHead& rpc_head,
         return ret;
     }
 
-    // 请求处理也保持会话，方便扩展
+    /* 请求处理也保持会话，方便扩展 */
     cxx::shared_ptr<RpcSession> session(new RpcSession());
     session->m_session_id  = GenSessionId();
     session->m_handle      = handle;
@@ -373,7 +373,7 @@ int32_t IRpc::ResponseException(int64_t handle, int32_t ret, const RpcHead& rpc_
     if (buff_len < sizeof(m_rpc_exception_buff)) {
         exception.m_message.assign((const char*)buff, buff_len);
     } else {
-        // 业务处理失败，业务数据超长时只返回业务错误码
+        /* 业务处理失败，业务数据超长时只返回业务错误码 */
         PLOG_ERROR_N_EVERY_SECOND(1, "exception msg too long %u", buff_len);
     }
 

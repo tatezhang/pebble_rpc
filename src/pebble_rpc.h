@@ -18,20 +18,20 @@
 
 namespace pebble {
 
-/// @brief Pebble RPC错误码定义
+/* @brief Pebble RPC错误码定义 */
 typedef enum {
     kPEBBLE_RPC_ERROR_BASE              = kRPC_PEBBLE_RPC_ERROR_BASE,
-    kPEBBLE_RPC_UNKNOWN_CODEC_TYPE      = kPEBBLE_RPC_ERROR_BASE - 1,  // 编码类型错误
-    kPEBBLE_RPC_MISS_RESULT             = kPEBBLE_RPC_ERROR_BASE - 2,  // 响应包无结果
-    kPEBBLE_RPC_ENCODE_HEAD_FAILED      = kPEBBLE_RPC_ERROR_BASE - 3,  // 编码RPC头失败
-    kPEBBLE_RPC_DECODE_HEAD_FAILED      = kPEBBLE_RPC_ERROR_BASE - 4,  // 解码RPC头失败
-    kPEBBLE_RPC_ENCODE_BODY_FAILED      = kPEBBLE_RPC_ERROR_BASE - 5,  // 编码RPC消息体失败
-    kPEBBLE_RPC_DECODE_BODY_FAILED      = kPEBBLE_RPC_ERROR_BASE - 6,  // 解码RPC消息体失败
-    kPEBBLE_RPC_MSG_TYPE_ERROR          = kPEBBLE_RPC_ERROR_BASE - 7,  // 消息类型错误
-    kPEBBLE_RPC_MSG_LENGTH_ERROR        = kPEBBLE_RPC_ERROR_BASE - 8,  // 消息长度错误
-    kPEBBLE_RPC_SERVICE_ALREADY_EXISTED = kPEBBLE_RPC_ERROR_BASE - 9,  // 服务已经注册
-    kPEBBLE_RPC_SERVICE_ADD_FAILED      = kPEBBLE_RPC_ERROR_BASE - 10, // 服务注册失败
-    kPEBBLE_RPC_INSUFFICIENT_MEMORY     = kPEBBLE_RPC_ERROR_BASE - 11, // 内存不足
+    kPEBBLE_RPC_UNKNOWN_CODEC_TYPE      = kPEBBLE_RPC_ERROR_BASE - 1,  /* 编码类型错误 */
+    kPEBBLE_RPC_MISS_RESULT             = kPEBBLE_RPC_ERROR_BASE - 2,  /* 响应包无结果 */
+    kPEBBLE_RPC_ENCODE_HEAD_FAILED      = kPEBBLE_RPC_ERROR_BASE - 3,  /* 编码RPC头失败 */
+    kPEBBLE_RPC_DECODE_HEAD_FAILED      = kPEBBLE_RPC_ERROR_BASE - 4,  /* 解码RPC头失败 */
+    kPEBBLE_RPC_ENCODE_BODY_FAILED      = kPEBBLE_RPC_ERROR_BASE - 5,  /* 编码RPC消息体失败 */
+    kPEBBLE_RPC_DECODE_BODY_FAILED      = kPEBBLE_RPC_ERROR_BASE - 6,  /* 解码RPC消息体失败 */
+    kPEBBLE_RPC_MSG_TYPE_ERROR          = kPEBBLE_RPC_ERROR_BASE - 7,  /* 消息类型错误 */
+    kPEBBLE_RPC_MSG_LENGTH_ERROR        = kPEBBLE_RPC_ERROR_BASE - 8,  /* 消息长度错误 */
+    kPEBBLE_RPC_SERVICE_ALREADY_EXISTED = kPEBBLE_RPC_ERROR_BASE - 9,  /* 服务已经注册 */
+    kPEBBLE_RPC_SERVICE_ADD_FAILED      = kPEBBLE_RPC_ERROR_BASE - 10, /* 服务注册失败 */
+    kPEBBLE_RPC_INSUFFICIENT_MEMORY     = kPEBBLE_RPC_ERROR_BASE - 11, /* 内存不足 */
 } PebbleRpcErrorCode;
 
 class PebbleRpcErrorStringRegister {
@@ -52,7 +52,7 @@ public:
 };
 
 
-/// @brief Pebble RPC消息编码类型定义
+/* @brief Pebble RPC消息编码类型定义 */
 typedef enum {
     kCODE_BINARY  = 0,  // thrift binary protocol
     kCODE_JSON,         // thrift json protocol
@@ -70,35 +70,45 @@ class TProtocol;
 }
 }
 
-/// @brief PebbleRpc封装同步、并行处理，服务注册等基本能力，和IDL无关
-/// 框架内部通用能力如异常处理等编解码使用dr完成
+/*
+@brief PebbleRpc封装同步、并行处理，服务注册等基本能力，和IDL无关
+框架内部通用能力如异常处理等编解码使用dr完成
+*/
 class PebbleRpc : public IRpc {
 public:
     PebbleRpc(CodeType code_type);
     virtual ~PebbleRpc();
 
-    /// @brief 添加服务，将用户实现的服务注册到PebbleRpc中
-    /// @param service 实现了IDL生成服务接口的对象指针，对象内存由用户管理
-    /// @return 0 成功
-    /// @return 非0 失败 @see PebbleRpcErrorCode
+    /* 
+        @brief 添加服务，将用户实现的服务注册到PebbleRpc中
+        @param service 实现了IDL生成服务接口的对象指针，对象内存由用户管理
+        @return 0 成功
+        @return 非0 失败 @see PebbleRpcErrorCode
+    */
     template<typename Class>
     int32_t AddService(Class* service);
 
 public:
-    /// @brief 编解码内存策略
-    /// @note 内部使用，用户无需关注
+    /*
+        @brief 编解码内存策略
+        @note 内部使用，用户无需关注
+    */
     enum MemoryPolicy {
         kBORROW = 0,
         kMALLOC = 1,
         kPOLICY_BUTT
     };
 
-    /// @brief 获取编解码器
-    /// @note 内部使用，用户无需关注
+    /*
+        @brief 获取编解码器
+        @note 内部使用，用户无需关注
+    */
     dr::protocol::TProtocol* GetCodec(MemoryPolicy mem_policy);
 
-    /// @brief 获取内存buffer
-    /// @note 内部使用，用户无需关注
+    /*
+        @brief 获取内存buffer
+        @note 内部使用，用户无需关注
+    */
     uint8_t* GetBuffer(int32_t size);
 
 private:
@@ -133,9 +143,10 @@ int32_t PebbleRpc::AddService(Class* service) {
     return AddService(GenServiceHandler<typename Class::__InterfaceType>()(this, service));
 }
 
-
-/// @brief PebbleRpc IDL生成代码服务端骨架代码接口
-/// @note 内部使用，用户无需关注
+/*
+    @brief PebbleRpc IDL生成代码服务端骨架代码接口
+    @note 内部使用，用户无需关注
+*/
 class IPebbleRpcService {
 public:
     virtual ~IPebbleRpcService() {}
